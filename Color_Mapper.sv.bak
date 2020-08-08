@@ -1,0 +1,63 @@
+//-------------------------------------------------------------------------
+//    Color_Mapper.sv                                                    --
+//    Stephen Kempf                                                      --
+//    3-1-06                                                             --
+//                                                                       --
+//    Modified by David Kesler  07-16-2008                               --
+//    Translated by Joe Meng    07-07-2013                               --
+//    Modified by Po-Han Huang  10-06-2017                               --
+//                                                                       --
+//    Fall 2017 Distribution                                             --
+//                                                                       --
+//    For use with ECE 385 Lab 8                                         --
+//    University of Illinois ECE Department                              --
+//-------------------------------------------------------------------------
+
+// color_mapper: Decide which color to be output to VGA for each pixel.
+module  Color_mapper (
+							  input        is_character,            // Whether current pixel belongs to ball
+							  input        character_frame,
+							  input	logic [3:0] idx_char1, idx_char2, idx_back1,
+                       output logic [7:0] VGA_R, VGA_G, VGA_B // VGA RGB output
+                     );
+    
+    logic [7:0] c_Red, c_Green, c_Blue, b_Red, b_Green, b_Blue, Red, Green, Blue;
+	 logic [3:0] idx_char, idx_back;
+
+	 always_comb
+	 begin
+		if(is_character == 1'b1) begin
+//			char_ra = charY * char_X_Size + charX;
+//			background_ra = 18'b0;
+			idx_back = idx_back1;
+			if(character_frame == 1'b0)
+				idx_char = idx_char1;
+			else
+				idx_char = idx_char2;
+			Red = c_Red;
+			Green = c_Green;
+			Blue = c_Blue;
+		end
+		else begin
+//			char_ra= 18'b0;
+//			background_ra = DrawY * back_X_Size + DrawX;
+			idx_back = idx_back1;
+			idx_char = idx_char1;
+			Red = b_Red;
+			Green = b_Green;
+			Blue = b_Blue;
+		end	
+	 end
+    // Output colors to VGA
+    assign VGA_R = Red;
+    assign VGA_G = Green;
+    assign VGA_B = Blue;
+    
+	 characterPalette charPAL(.data_in(idx_char), .Red(c_Red), .Green(c_Green), .Blue(c_Blue));
+	 
+	 backgroundPalette backPAL(.data_in(idx_back), .Red(b_Red), .Green(b_Green), .Blue(b_Blue));
+	 
+				  
+    // Assign color based on is_ball signal
+    
+endmodule

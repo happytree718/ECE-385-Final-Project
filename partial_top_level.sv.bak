@@ -1,0 +1,110 @@
+module partial_top_level(
+                        input logic Clk, Reset,
+                        input logic [7:0] keycode,
+                        input logic [9:0]     Char_X, Char_Y,
+                        output logic [9:0]	Monster_X, Monster_Y,
+			            output logic [9:0]	monster_bullet_X_L, monster_bullet_Y_L, 
+						                	monster_bullet_X_R, monster_bullet_Y_R, 
+						            	    monster_bullet_X_U, monster_bullet_Y_U,
+						                	monster_bullet_X_D, monster_bullet_Y_D,
+                        output logic [9:0]    bullet_X, bullet_Y,
+                        output logic dungeon_frame, initial_frame, final_frame, game_over
+);
+
+logic finish_1, finish_2, die_1, die_2;
+logic active_1, active_2;
+logic [9:0] Monster_X_1, Monster_Y_1, monster_bullet_X_L_1, monster_bullet_Y_L_1, 
+            monster_bullet_X_R_1, monster_bullet_Y_R_1, monster_bullet_X_U_1, monster_bullet_Y_U_1,
+			monster_bullet_X_D_1, monster_bullet_Y_D_1, bullet_X_1, bullet_Y_1,
+            Monster_X_2, Monster_Y_2, monster_bullet_X_L_2, monster_bullet_Y_L_2, 
+            monster_bullet_X_R_2, monster_bullet_Y_R_2, monster_bullet_X_U_2, monster_bullet_Y_U_2,
+			monster_bullet_X_D_2, monster_bullet_Y_D_2, bullet_X_2, bullet_Y_2;
+assign dungeon_frame = active_1 | active_2;
+
+always_comb begin
+    if(active_1 == 1'b1) begin
+        Monster_X = Monster_X_1; 
+        Monster_Y = Monster_Y_1;
+        monster_bullet_X_L = monster_bullet_X_L_1;
+        monster_bullet_Y_L = monster_bullet_Y_L_1; 
+		monster_bullet_X_R = monster_bullet_X_R_1;
+        monster_bullet_Y_R = monster_bullet_Y_R_1;
+	    monster_bullet_X_U = monster_bullet_X_U_1; 
+        monster_bullet_Y_U = monster_bullet_Y_U_1;
+		monster_bullet_X_D = monster_bullet_X_D_1; 
+        monster_bullet_Y_D = monster_bullet_Y_D_1;
+        bullet_X = bullet_X_1; 
+        bullet_Y = bullet_Y_1;
+    end
+    else if (active_2 == 1'b1) begin
+        Monster_X = Monster_X_2; 
+        Monster_Y = Monster_Y_2;
+        monster_bullet_X_L = monster_bullet_X_L_2;
+        monster_bullet_Y_L = monster_bullet_Y_L_2; 
+		monster_bullet_X_R = monster_bullet_X_R_2;
+        monster_bullet_Y_R = monster_bullet_Y_R_2;
+	    monster_bullet_X_U = monster_bullet_X_U_2; 
+        monster_bullet_Y_U = monster_bullet_Y_U_2;
+		monster_bullet_X_D = monster_bullet_X_D_2; 
+        monster_bullet_Y_D = monster_bullet_Y_D_2;
+        bullet_X = bullet_X_2; 
+        bullet_Y = bullet_Y_2;
+    end
+    else begin
+        Monster_X = 10'b0; 
+        Monster_Y = 10'b0;
+        monster_bullet_X_L = 10'b0;
+        monster_bullet_Y_L = 10'b0; 
+		monster_bullet_X_R = 10'b0;
+        monster_bullet_Y_R = 10'b0;
+	    monster_bullet_X_U = 10'b0; 
+        monster_bullet_Y_U = 10'b0;
+		monster_bullet_X_D = 10'b0; 
+        monster_bullet_Y_D = 10'b0;
+        bullet_X = 10'b0; 
+        bullet_Y = 10'b0;
+    end
+end
+
+
+master_state_controller MSC(.*);
+
+level level_1(
+            .Reset(~active_1),
+            .die(die_1),
+            .finish(finish_1),
+            .Monster_X(Monster_X_1),
+            .Monster_Y(Monster_Y_1),
+			.monster_bullet_X_L(monster_bullet_X_L_1), 
+            .monster_bullet_Y_L(monster_bullet_Y_L_1), 
+	    	.monster_bullet_X_R(monster_bullet_X_R_1), 
+            .monster_bullet_Y_R(monster_bullet_Y_R_1), 
+        	.monster_bullet_X_U(monster_bullet_X_U_1), 
+            .monster_bullet_Y_U(monster_bullet_Y_U_1),
+			.monster_bullet_X_D(monster_bullet_X_D_1), 
+            .monster_bullet_Y_D(monster_bullet_Y_D_1),
+            .bullet_X(bullet_X_1), 
+            .bullet_Y(bullet_Y_1),
+            .*
+);
+
+level level_2(
+            .Reset(~active_2),
+            .die(die_2),
+            .finish(finish_2),
+            .Monster_X(Monster_X_2),
+            .Monster_Y(Monster_Y_2),
+			.monster_bullet_X_L(monster_bullet_X_L_2), 
+            .monster_bullet_Y_L(monster_bullet_Y_L_2), 
+	    	.monster_bullet_X_R(monster_bullet_X_R_2), 
+            .monster_bullet_Y_R(monster_bullet_Y_R_2), 
+        	.monster_bullet_X_U(monster_bullet_X_U_2), 
+            .monster_bullet_Y_U(monster_bullet_Y_U_2),
+			.monster_bullet_X_D(monster_bullet_X_D_2), 
+            .monster_bullet_Y_D(monster_bullet_Y_D_2),
+            .bullet_X(bullet_X_2), 
+            .bullet_Y(bullet_Y_2),
+            .*
+);
+
+endmodule

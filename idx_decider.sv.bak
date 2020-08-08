@@ -1,0 +1,20 @@
+module idx_decider(input logic is_character,
+						 input logic [9:0] DrawX, DrawY,
+						 input logic [9:0] charX, charY,
+						 output logic [18:0] char_ra, background_ra
+						);
+	parameter [9:0] char_X_Size = 10'd42; 
+	parameter [9:0] back_X_Size = 10'd800;
+	always_comb
+	begin
+		if(is_character == 1'b1) begin
+			char_ra = charY * char_X_Size + charX;
+			background_ra = 18'b0;
+		end
+		else begin
+			char_ra= 18'b0;
+			background_ra = DrawY * back_X_Size + DrawX;
+		end	
+	end
+endmodule
+

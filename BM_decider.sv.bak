@@ -1,0 +1,7 @@
+module BM_decider
+(input logic [9:0] monster_bullet_X_L, monster_bullet_Y_L,
+						 monster_bullet_X_R, monster_bullet_Y_R,
+						 monster_bullet_X_U, monster_bullet_X_U,
+						 monster_bullet_X_D, monster_bullet_X_D;
+						 
+						)

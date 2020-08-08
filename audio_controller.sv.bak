@@ -1,0 +1,77 @@
+module audio_contoller{
+							input logic Clk, Reset，
+							input logic AUD_DACLRCK, AUD_ADCLRCK, AUD_BCLK,
+							output logic AUD_DACDAT, AUD_XCK, I2C_SCLK, I2C_SDAT
+};
+
+enum logic { IDLE, INI, DAT,  } State, Next_state;
+logic INIT, INIT_FINISH, data_over, adc_full, AUD_ADCDAT;
+logic [31:0] ADCDATA;
+logic [15:0] LDATA, RDATA, LDATA_in, RDATA_in;
+
+always_ff @(posedge Clk) begin
+	if (Reset)
+		State <= IDLE;
+	else begin
+		State <= Next_state;
+		LDATA <= LDATA_in;
+		RDATA <= RDATA_in;
+	end
+end
+
+always_comb begin
+	INIT = 1'b0;
+	Next_state = State;
+	LDATA_in = LDATA;
+	RDATA_in = RDATA;
+	case(State)
+		IDLE: 	Next_state = INI;
+		INI: begin 
+			if(INIT_FINISH)
+				Next_state = GET_DATA;
+		end
+		GET_DATA: begin
+			if(data_over)
+				Next_state = DAC;
+		end
+		DAC: begin
+			if(~data_over)
+				Next_state = GET_DATA;
+		end 
+		default:;
+	endcase		
+
+	case(State)
+		INI: INIT = 1'b1;
+		GET_DATA: begin
+			LDATA_in = 
+			RDATA_in =  
+		end
+		default:;
+	endcase
+end
+
+
+
+
+audio_interface AUDIO(
+					.LDATA,
+					.RDATA,
+					.clk(Clk),
+					.Reset,
+					.INIT,
+					.INIT_FINISH,
+					.adc_full,
+					.data_over,
+					.AUD_MCLK(AUD_XCK),
+					.AUD_BCLK,
+					.AUD_ADCDAT,
+					.AUD_DACDAT,
+					.AUD_ADCLRCLK,
+					.AUD_DACLRCLK,
+					.I2C_SDAT,
+					.I2C_SCLK,
+					.ADCDATA
+);
+
+endmodule

@@ -1,0 +1,46 @@
+module level(
+            input logic          Clk, Reset,
+            input logic [9:0]    Char_X, Char_Y,
+            input logic [7:0]    keycode,
+            output logic         die, finish,
+            output logic [9:0]	Monster_X, Monster_Y,
+			output logic [9:0]	monster_bullet_X_L, monster_bullet_Y_L, 
+							monster_bullet_X_R, monster_bullet_Y_R, 
+							monster_bullet_X_U, monster_bullet_Y_U,
+							monster_bullet_X_D, monster_bullet_Y_D,
+            output logic [9:0]    bullet_X, bullet_Y
+);
+
+logic hit_by_bullet, hit_by_monster;
+logic [2:0] char_health;
+parameter [2:0] initial_char_health = 3'b111;
+
+always_ff @(posedge Clk) begin
+    if(Reset)
+        char_health <= initial_char_health;
+    else if(hit_by_monster)
+        char_health <= char_health - 1'b1;
+end
+
+always_comb begin
+    die = 1'b0;
+    finish = 1'b0;
+    if(char_health == 3'b0)
+        die =  1'b1;
+    else if((Monster_X == 10'b0) && (Monster_Y == 10'b0))
+        finish = 1'b1;
+end
+
+monster monster_1 (
+                .hit(hit_by_bullet),
+                .hit_char(hit_by_monster),
+                .*
+);
+
+bullet bullet_1(
+                .hit(hit_by_bullet),
+                .*
+);
+
+
+endmodule

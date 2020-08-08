@@ -1,0 +1,46 @@
+module master_state_controller(
+							input Clk, Reset,
+							input [7:0] keycode,
+							input finish_1, finish_2, die_1, die_2,
+							output active_1, active_2, initial_frame, final_frame, game_over
+);
+
+enum logic [4:0] {Start, L1, L2, End, Game_Over} State, Next_state;
+
+always_ff @(posedge Clk) begin
+	if (Reset)
+		State <= Start;
+	else
+		State <= Next_state;
+end
+
+always_comb begin
+	initial_frame = 1'b0;
+	final_frame = 1'b0;
+	active_1 = 1'b0;
+	active_2 = 1'b0;
+	game_over = 1'b0;
+	if(die_1 | die_2)
+		Next_state = Game_Over;
+	else begin
+		Next_state = State;
+		case(State)
+			Start:if(keycode == 8'h28)
+						Next_state = L1;
+			L1:	if(finish_1)
+						Next_state = L2;
+			L2:	if(finish_2)
+						Next_state = End;
+		endcase
+	end
+	
+	case(State)
+		Start: initial_frame = 1'b1;
+		L1: active_1 = 1'b1;
+		L2: active_2 = 1'b1;
+		End: final_frame = 1'b1;
+		Game_Over: game_over = 1'b1;
+	endcase
+end
+
+endmodule

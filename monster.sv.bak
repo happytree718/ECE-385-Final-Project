@@ -1,0 +1,96 @@
+module monster(
+				input logic Clk, Reset, hit,
+				input logic [9:0]		Char_X, Char_Y,
+				output logic [9:0]	Monster_X, Monster_Y,
+				output logic [9:0]	monster_bullet_X_L, monster_bullet_Y_L, 
+								monster_bullet_X_R, monster_bullet_Y_R, 
+								monster_bullet_X_U, monster_bullet_Y_U,
+								monster_bullet_X_D, monster_bullet_Y_D,
+				output logic 	hit_char	
+);
+
+	parameter [9:0] monster_X_top = 10'd210;  // Center position on the X axis VGA is 640 * 480
+	parameter [9:0] monster_Y_top = 10'd120; 
+
+	parameter [9:0] monster_X_Min = 10'd40;       // Leftmost point on the X axis
+	parameter [9:0] monster_X_Max = 10'd599;     // Rightmost point on the X axis
+	parameter [9:0] monster_Y_Min = 10'd40;       // Topmost point on the Y axis
+	parameter [9:0] monster_Y_Max = 10'd439;     // Bottommost point on the Y axis
+	parameter [9:0] monster_X_Step = 10'd4;    // Step size on the X axis
+	parameter [9:0] monster_Y_Step = 10'd4;      // Step size on the Y axis
+// temporary variable	
+	parameter [9:0] monster_X_Size = 10'd20;
+	parameter [9:0] monster_Y_Size = 10'd20;
+	parameter [1:0] initial_health = 2'b11;
+
+	logic [1:0] health;
+	logic [9:0] monster_X_Pos, monster_X_Motion, monster_Y_Pos, monster_Y_Motion;
+	logic [9:0] monster_X_Pos_in, monster_X_Motion_in, monster_Y_Pos_in, monster_Y_Motion_in;
+	logic L_hit, R_hit, U_hit, D_hit;
+
+	assign Monster_X = monster_X_Pos;
+	assign Monster_Y = monster_Y_Pos;
+	assign hit_char = L_hit | R_hit | U_hit | D_hit;
+
+	always_ff @(posedge Clk) begin
+		if (Reset)
+			health <= initial_health;
+			monster_X_Pos <= monster_X_top;
+			monster_Y_Pos <= monster_Y_top;
+		if (hit)
+			health <= health - 1'b1;
+		if (health == 2'b00)
+			monster_X_Pos <= 10'b0;
+			monster_Y_Pos <= 10'b0;
+	end
+
+	bullet bullet_left (
+						.keycode(8'h50),
+						.Char_X(monster_X_Pos),
+						.Char_Y(monster_Y_Pos),
+						.Monster_X(Char_X),
+						.Monster_Y(Char_Y),
+						.bullet_X(monster_bullet_X_L),
+						.bullet_Y(monster_bullet_Y_L),
+						.hit(L_hit),
+						.*
+	);
+
+	bullet bullet_right (
+						.keycode(8'h4f),
+						.Char_X(monster_X_Pos),
+						.Char_Y(monster_Y_Pos),
+						.Monster_X(Char_X),
+						.Monster_Y(Char_Y),
+						.bullet_X(monster_bullet_X_R),
+						.bullet_Y(monster_bullet_Y_R),
+						.hit(R_hit),
+						.*
+	);
+
+	bullet bullet_up (
+						.keycode(8'h52),
+						.Char_X(monster_X_Pos),
+						.Char_Y(monster_Y_Pos),
+						.Monster_X(Char_X),
+						.Monster_Y(Char_Y),
+						.bullet_X(monster_bullet_X_U),
+						.bullet_Y(monster_bullet_Y_U),
+						.hit(U_hit),
+						.*
+	);
+
+	bullet bullet_down (
+						.keycode(8'h51),
+						.Char_X(monster_X_Pos),
+						.Char_Y(monster_Y_Pos),
+						.Monster_X(Char_X),
+						.Monster_Y(Char_Y),
+						.bullet_X(monster_bullet_X_D),
+						.bullet_Y(monster_bullet_Y_D),
+						.hit(D_hit),
+						.*
+	);
+
+
+endmodule

@@ -1,0 +1,199 @@
+module characterPalette
+(
+	input logic [3:0] data_in,
+	output logic [7:0] Red, Green, Blue
+);
+
+	logic [7:0] R, G, B;
+
+	assign Red = R;
+	assign Green = G;
+	assign Blue = B;
+
+	always_comb
+	begin
+		case(data_in)
+		4'b0001:
+		begin
+			R = 8'h02;
+			G = 8'h04;
+			B = 8'h00;
+		end
+		4'b0010:
+		begin
+			R = 8'h2e;
+			G = 8'h2e;
+			B = 8'h2e;
+		end
+		4'b0011:
+		begin
+			R = 8'h41;
+			G = 8'h41;
+			B = 8'h41;
+		end
+		4'b0100:
+		begin
+			R = 8'h44;
+			G = 8'h4b;
+			B = 8'h3e;
+		end
+		4'b0101:
+		begin
+			R = 8'h2f;
+			G = 8'h37;
+			B = 8'h29;
+		end
+		4'b0110:
+		begin
+			R = 8'h43;
+			G = 8'h4c;
+			B = 8'h3d;
+		end
+		4'b0111:
+		begin
+			R = 8'h73;
+			G = 8'hf7;
+			B = 8'h05;
+		end
+		4'b1000:
+		begin
+			R = 8'h60;
+			G = 8'h7c;
+			B = 8'h8a;
+		end
+		4'b1001:
+		begin
+			R = 8'h78;
+			G = 8'h90;
+			B = 8'h9c;
+		end
+		4'b1010:
+		begin
+			R = 8'h90;
+			G = 8'ha3;
+			B = 8'had;
+		end
+		default:
+		begin
+		R = 8'h80;
+		G = 8'h00;
+		B = 8'h80;
+		end
+		endcase
+	end
+endmodule
+
+module backgroundPalette
+(
+	input logic [3:0] data_in,
+	output logic [7:0] Red, Green, Blue
+);
+
+	logic [7:0] R, G, B;
+
+	assign Red = R;
+	assign Green = G;
+	assign Blue = B;
+
+	always_comb
+		begin	
+		case(data_in)
+		4'b0001:
+		begin
+			R = 8'h30;
+			G = 8'h30;
+			B = 8'h30;
+		end
+		4'b0010:
+		begin
+			R = 8'h4b;
+			G = 8'h45;
+			B = 8'h45;
+		end
+		4'b0011:
+		begin
+			R = 8'h5d;
+			G = 8'h54;
+			B = 8'h54;
+		end
+		4'b0100:
+		begin
+			R = 8'h5b;
+			G = 8'h57;
+			B = 8'h57;
+		end
+		4'b0101:
+		begin
+			R = 8'h58;
+			G = 8'h50;
+			B = 8'h4f;
+		end
+		4'b0110:
+		begin
+			R = 8'h82;
+			G = 8'h7b;
+			B = 8'h7a;
+		end
+		4'b0111:
+		begin
+			R = 8'h88;
+			G = 8'h81;
+			B = 8'h7b;
+		end
+		4'b1000:
+		begin
+			R = 8'h56;
+			G = 8'h55;
+			B = 8'h53;
+		end
+		4'b1001:
+		begin
+			R = 8'h37;
+			G = 8'h36;
+			B = 8'h34;
+		end
+		4'b1010:
+		begin
+			R = 8'h30;
+			G = 8'h2f;
+			B = 8'h2b;
+		end
+		4'b1011:
+		begin
+			R = 8'h30;
+			G = 8'h2f;
+			B = 8'h2b;
+		end
+		4'b1100:
+		begin
+			R = 8'h45;
+			G = 8'h45;
+			B = 8'h42;
+		end
+		4'b1101:
+		begin
+			R = 8'h3a;
+			G = 8'h36;
+			B = 8'h3c;
+		end
+		4'b1110:
+		begin
+			R = 8'h51;
+			G = 8'h4a;
+			B = 8'h4e;
+		end
+		4'b1111:
+		begin
+			R = 8'h85;
+			G = 8'h7e;
+			B = 8'h83;
+		end
+		default:
+		begin
+			R = 8'h80;
+			G = 8'h00;
+			B = 8'h80;
+		end
+		endcase
+	end
+endmodule 
